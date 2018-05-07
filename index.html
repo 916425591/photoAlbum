@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My first Vue app</title>
+  <script src="https://unpkg.com/vue"></script>
+</head>
+<body>
+  <div id="app">
+  
+  
+  
+	 <div id="wrap">
+	      <img src="img/0.png" />
+				<img src="img/01.png" />
+				<img src="img/02.png" />
+				<img src="img/03.png" />
+				<img src="img/04.png" />
+				<img src="img/05.png" />
+				<img src="img/06.png" />
+	  </div>
+    <span id="clock"></span>
+    <div id="data" v-show="data"> 
+   <p> 
+    <span id="prev">上一月</span> 
+    <span id="nian">2017</span> 
+    <span id="next">下一月</span> 
+   </p> 
+   <h5 id="yue">一月</h5> 
+   <ul id="title"> 
+    <li>日</li> 
+    <li>一</li> 
+    <li>二</li> 
+    <li>三</li> 
+    <li>四</li> 
+    <li>五</li> 
+    <li>六</li> 
+   </ul> 
+   <ul id="date"> 
+   </ul> 
+  </div> 
+    
+    <!--js-->
+  <div v-show="inputShow" class="input-obg"><input type="text"  v-model='obgSpe' placeholder="请输入评论" @keyup="handleObgSpe($event,obgSpe)">
+  <button @click="handleObgSpe(obgSpe)">确定</button>
+  </div>
+   <div v-if="specInput.length>0" class="spec-span">
+    <span class="input-icon"
+     :class="{actives: items.number==1}" 
+     :style="{
+     color:'#'+items.color,
+     top:items.right+'%',
+     left:items.right+'%'}" 
+     v-for="items in specInput">{{items.name}}{{items.number}}</span>
+  </div>
+  <ul class="special">
+    <li v-for="item in specialList" :style="{background:item.class}" @click="specialClick(item)">{{item.title}}</li>
+  </ul>
+  
+  
+  <ul class="news" v-show="news">
+    <li v-for="item in newsList" ><span>{{item.title}}</span>{{item.titles}}</li>
+  </ul>
+
+ 
+  </div>
+
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        message: 'Hello Vue!',
+        specialList:[
+          {
+           id:0,
+           title:"弹幕",
+           class:'#409EFF'
+          },
+          {
+           id:1,
+           title:"日历",
+           class:'#F56C6C'
+          },
+          {
+           id:2,
+           title:"公告",
+           class:'#ffde94'
+          }
+        ],
+        newsList:[
+          {
+           id:0,
+           title:"心情",
+           titles:'今天天气非常好'
+           
+          },
+          {
+           id:1,
+           title:"学习",
+           titles:'今天有课吗？是：不是'
+           
+          },
+          {
+           id:1,
+           title:"学习",
+           titles:'今天有课吗？是：不是'
+          },
+           {
+           id:1,
+           title:"学习",
+           titles:'今天有课吗？是：不是'
+          },
+           {
+           id:1,
+           title:"学习",
+           titles:'今天有课吗？是：不是'
+          },
+           {
+           id:1,
+           title:"学习",
+           titles:'今天有课吗？是：不是'
+          }
+        ],
+        obgSpe:'',
+        specInput:[
+        
+        ],
+        data:false,
+        specInputShow:false,
+        inputShow:false,
+        news:false
+      },
+      methods:{
+	      handleObgSpe(ev,obgSpe){
+	      if(ev.keyCode == 13){  
+           if(obgSpe!=null && obgSpe!=""){
+	         //随机6位数
+	         let  Num=""; 
+						for(let i=0;i<6;i++) 
+						{ 
+						Num+=Math.floor(Math.random()*10); 
+						} 
+						let left=''
+						for(let j=0;j<2;j++) 
+						{ 
+						left+=Math.floor(Math.random()*10); 
+						}
+						let right=''
+						for(let k=0;k<2;k++) 
+						{ 
+						right+=Math.floor(Math.random()*10); 
+						}
+	         let obg={
+	          id:0,
+	          name:obgSpe,
+	          color:Num,
+	          number:1,
+	          left:left,
+	          right:right
+	         }
+	         if(this.specInput.length>0){
+	         this.specInput[this.specInput.length-1].number=0
+	         }
+	         
+	         this.specInput.push(obg);
+	         
+	         
+	      }
+        }  
+	     
+	      },
+	      specialClick(item){
+	      if(item.id == 0){
+	       this.inputShow=true;
+	       this.data=false;
+	       this.news=false
+	      }else if(item.id == 1){
+	       this.data=true;
+	       this.inputShow=false;
+	       this.news=false
+	      }else{
+	        this.news=true
+	        this.inputShow=false;
+	        this.data=false;
+	      }
+	      
+	      }
+      }
+    })
+    
+    //3D照片
+    //先找到所有的图片   通过标签名来找
+        	var imgs=document.getElementsByTagName("img");
+        	
+        	//对照片进行for循环   因为左右两边是对称的，所以不需要循环imgs.length次，而是imgs.length/2
+        	//把第三张图片放在正中央   左右分别放三张  
+        	var INow=3;
+        	var target=0;
+        	//解决疯狂点击   用一个类似于锁的变量
+        	var off=true;
+        	Tab(INow);
+        	//0 1 2 3 4 5 6
+        	//4 5 6 0 1 2 3
+        	//3 4 5 6 0 1 2
+        	for (var i = 0; i < imgs.length; i++) {
+        		//为每一张图片创建一个index
+        		imgs[i].index=i;
+        		//对图片创建点击事件
+        		imgs[i].onclick=function(){
+        			target=this.index;
+        			//如果门是关了的，就不执行下面的代码
+        			if(!off){
+        			   return;
+        			}
+        			off=false;
+        			if(target>INow){
+        				//4 5  6
+        				if(target-INow<=3){
+        					goNext();
+        				}else{
+        					goPre();
+        					
+        				}
+        			}
+        			//就把哪一张放在中间
+                    else{
+                    	//0 1 2
+        					if(target+7-INow<=3){
+        					
+        						goNext();
+        					}else{
+        						goPre();
+        					}
+                    }
+        			
+        			
+        		};
+        	}
+        	function goNext(){
+        		INow++;
+        		if(INow>6){
+        			INow=0;
+        		}
+        		Tab(INow);
+        		//如果到了目标点的时候就停止移动
+        		if(INow==target){
+        			off=true;
+        			return;
+        		}
+        		setTimeout(function(){
+        			goNext();
+        		},700);
+        	}
+        	function goPre(){
+        		INow--;
+        		if(INow<0){
+        			INow=6;
+        		}
+        		Tab(INow);
+        		//如果到了目标点的时候就停止移动
+        		if(INow==target){
+        			off=true;
+        			return;
+        		}
+        		setTimeout(function(){
+        			goPre();
+        		},700);
+        	}
+        	//函数封装   将第几张图片放在正中央
+        	//0 1 2 3 4 5 6
+        	//4 5 6 0 1 2 3
+        	//3 4 5 6 0 1 2
+        	function Tab(n){
+        		for (var i = 0; i < 3; i++) {
+        			var left=n-1-i;
+        			//0在中间
+        			if(left<0){
+        				left=left+7;
+        			}       			
+        			imgs[left].style.transform='translateX('+(-150*(i+1))+'px)translateZ('+(150-100*i)+'px)rotateY(30deg)';
+        			//6在中间
+        			var right=n+1+i;
+        			if(right>6){
+        				right=right-7;
+        			}
+        			
+        			imgs[right].style.transform='translateX('+(150*(i+1))+'px)translateZ('+(150-100*i)+'px)rotateY(-30deg)';
+        		}
+        		imgs[INow].style.transform='translateZ(300px)';
+//      		imgs[INow].style.boxShadow= 'rgb(38, 21, 21) 2px 2px 22px';
+//      		imgs[INow].style.border= '2px solid #f1c0c0';
+        	}
+  function displayTime() {
+    var elt = document.getElementById("clock"); // 通过id= "clock"找到元素
+    var now = new Date(); // 得到当前时间
+    elt.innerHTML = now.toLocaleTimeString(); //让elt来显示它
+    setTimeout(displayTime,1000); //在1秒后再次执行
+   }
+   window.onload = displayTime; //当onload事件发生时开始显示时间
+   
+   //*************************************************************
+   var dat = new Date(); //当前时间 
+   var nianD = dat.getFullYear();//当前年份 
+   var yueD = dat.getMonth(); //当前月 
+   var tianD = dat.getDate(); //当前天 这保存的年月日 是为了 当到达当前日期 有对比 
+     
+   add(); //进入页面第一次渲染 
+     
+   function add(){ 
+    document.getElementById('date').innerHTML = ""; 
+      
+    var nian = dat.getFullYear();//当前年份 
+    var yue = dat.getMonth(); //当前月 
+    var tian = dat.getDate(); //当前天 
+    var arr=["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]; 
+    document.getElementById('nian').innerText = nian; 
+    document.getElementById('yue').innerText = arr[yue]; 
+      
+    var setDat = new Date(nian,yue + 1,1 - 1); //把时间设为下个月的1号 然后天数减去1 就可以得到 当前月的最后一天; 
+    var setTian = setDat.getDate(); //获取 当前月最后一天 
+    var setZhou = new Date(nian,yue,1).getDay(); //获取当前月第一天 是 周几 
+      
+    for(var i=0;i<setZhou ;i++){//渲染空白 与 星期 对应上 
+     var li=document.createElement('li'); 
+     document.getElementById('date').appendChild(li); 
+    } 
+      
+    for(var i=1;i<=setTian;i++){//利用获取到的当月最后一天 把 前边的 天数 都循环 出来 
+     var li=document.createElement('li'); 
+     li.innerText = i; 
+     if(nian == nianD && yue == yueD && i == tianD){ 
+      li.className = "active"; 
+     }else{ 
+      li.className = "hover"; 
+     } 
+       
+     document.getElementById('date').appendChild(li); 
+    } 
+      
+   } 
+     
+   document.getElementById("next").onclick = function(){ 
+    dat.setMonth(dat.getMonth() + 1); //当点击下一个月时 对当前月进行加1; 
+    add(); //重新执行渲染 获取去 改变后的 年月日 进行渲染; 
+   }; 
+   document.getElementById("prev").onclick = function(){ 
+    dat.setMonth(dat.getMonth() - 1); //与下一月 同理 
+    add(); 
+   }; 
+  </script>
+  <style>
+  body{
+    padding: 0px;
+    margin: 0px;
+  }
+  ul{
+   padding: 0px;
+   margin: 0px;
+  }
+  li{
+  list-style: none;
+  }
+  
+  #app{
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background: #ffb0b0f7;
+  }
+  .special{
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    padding: 20px;
+    border-radius:3px ;
+    z-index: 20;
+  }
+  .special li{
+    border-radius:3px ;
+    color: #fff;
+    width: 120px;
+    padding: 4px 5px;
+    text-align: center;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+  .special li:nth-child(1):hover{
+   box-shadow: 1px 1px 10px #409EFF;
+  }
+  .special li:nth-child(1):active{
+   background: rgb(52, 123, 196) !important;
+  }
+  
+  .special li:nth-child(2):hover{
+   box-shadow: 1px 1px 10px #F56C6C;
+  }
+  .special li:nth-child(2):active{
+   background: #cb5e5e !important;
+  }
+  
+   .special li:nth-child(3):hover{
+   box-shadow: 1px 1px 10px #ffde94;
+  }
+  .special li:nth-child(3):active{
+   background: #fad073 !important;
+  }
+  .input-obg{
+  position: absolute;
+    top: 39px;
+    transition: ease-in-out 3s; 
+    right: 212px;
+    z-index: 5;
+  }
+  .input-obg input{
+    border-radius: 3px 0px 0px 3px;
+   outline:none;
+    padding: 7px 8px;
+    border: none;
+    width: 300px;
+    float: left;
+  }
+  .input-obg button{
+    height: 31px;
+    outline:none;
+    float: left;
+    cursor: pointer;
+    border-radius: 0px 3px 3px 0px;
+    border: none;
+    background: #f56c6c;
+    color: #fff;
+    padding: 0px 12px;
+  }
+  .input-obg button:hover{
+  background: #f37d7d;
+  }
+  .input-icon{
+    font-size: 14px;
+  }
+  .actives{
+  font-weight:bold;
+  font-size: 18px;
+  text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 40px #ff00de, 0 0 70px #ff00de;
+  }
+  .spec-span{
+  position: fixed;
+    height: 100%;
+    top: 0px;
+    width: 100%;
+    z-index: 1;
+  }
+  .spec-span span{
+  position: fixed;
+  }
+  .news{
+   width: 280px; 
+    box-shadow: 0px 0px 10px #ffe7e7;
+    padding: 10px;
+    height: 190px;
+    background: #ffe7e7;
+    position: fixed;
+    z-index: 10;
+    right: 10px;
+    bottom: 10px;
+    overflow-y: auto;
+  }
+  
+  
+  .news::-webkit-scrollbar {/*滚动条整体样式*/
+        width: 5px;     /*高宽分别对应横竖滚动条的尺寸*/
+        height: 1px;
+    }
+.news::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+     
+         -webkit-box-shadow: inset 0 0 5px transparent;
+        background: #ddd;
+    }
+.news::-webkit-scrollbar-track {/*滚动条里面轨道*/
+        -webkit-box-shadow: inset 0 0 5px transparent;
+      
+        background: #EDEDED;
+    }
+  
+  .news li{
+   margin-bottom: 10px;
+   padding: 2px 10px;
+   height: 30px;
+   cursor: pointer;
+   font-size: 14px;
+   line-height: 30px;
+  }
+  .news li span{
+  background: #409EFF;
+  padding: 2px 5px;
+  margin-right: 4px;
+  color: #fff;
+  font-size: 12px;
+  }
+  .news li:hover{
+  color: #fff;
+   background: #F37D7D;
+  }
+	/*秒表*/
+	#clock {
+    font: bold 16pt sans;
+    background: #ffe7e7;
+    padding: 10px;
+    
+    border-radius: 10px;
+        position: absolute;
+    left: 20px;
+    top: 20px;
+   }
+  /*把左右两边的外边距去掉*/
+		body{
+	/*auto只能实现左右居中*/
+	margin: 0;
+	background-color: #3D3D3D;
+		}
+			#wrap{
+				width: 100%;
+				height:500px;				
+				position: relative;
+			  top: 125px;
+				/*一定要有以下样式，才会有3D的效果*/
+				/*把div变成3D的场景*/
+				transform-style: preserve-3d;
+				perspective: 1500px;
+			}
+			#wrap img{
+				/*对所有的图片进行设置样式*/
+				width: 400px;
+				height:250px;
+				/*这里一定要设置为绝对定位*/
+				position: absolute;
+				/*calc()是一个计算函数  页面的宽度-容器宽度的一半*/
+				left: calc(50% - 200px);
+				top: calc(50% - 150px);
+				border-radius: 7px;
+				/*看到图片的运动过程*/
+				transition:0.8s ease-in-out;
+			}
+  
+  /*时钟*/
+  #data{ 
+    width: 280px; 
+    box-shadow: 0px 0px 10px #ffe7e7;
+    padding: 10px 0px;
+        background: #ffe7e7;
+        position: fixed;
+        z-index: 10;
+        right: 10px;
+        bottom: 10px;
+   } 
+   #data > p{ 
+    display: flex; 
+    margin: 0px;
+   } 
+   #data > h5{ 
+       margin: 0px;
+    margin-bottom: 10px;
+    text-align: center; 
+   } 
+   #data > p > span{ 
+    padding: 0 10px; 
+   } 
+   #prev,#next{ 
+    cursor: pointer; 
+   } 
+   #nian{ 
+    flex: 1; 
+    text-align: center; 
+   } 
+   #title{ 
+    overflow: hidden; 
+    list-style: none; 
+    background: #ccc; 
+   } 
+   #title > li{ 
+    float: left; 
+    width: 40px; 
+    height: 26px; 
+    line-height: 26px; 
+    text-align: center; 
+   } 
+   #date{ 
+    overflow: hidden; 
+    list-style: none; 
+   } 
+   #date > li{ 
+    float: left; 
+    width: 25px; 
+    height: 25px; 
+    margin: 1px 1px; 
+    border: 2px solid rgba(0,0,0,0); 
+    line-height: 25px; 
+    
+    text-align: center; 
+    cursor: pointer; 
+   } 
+   #date > .hover:hover{ 
+    border: 2px solid red; 
+   } 
+     
+   .active{ 
+    color: red; 
+   } 
+  </style>
+</body>
+</html>
