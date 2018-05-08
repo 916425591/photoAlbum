@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>My Photo Album</title>
     <script src="https://unpkg.com/vue"></script>
 </head>
@@ -14,6 +15,8 @@
         <img src="img/04.png"/>
         <img src="img/05.png"/>
         <img src="img/06.png"/>
+        <img src="img/07.png"/>
+        <img src="img/08.png"/>
     </div>
     <span id="clock"></span>
     <div id="data" v-show="data">
@@ -170,14 +173,12 @@
             }
         }
     })
-
-    //3D照片
     //先找到所有的图片   通过标签名来找
     var imgs = document.getElementsByTagName("img");
 
     //对照片进行for循环   因为左右两边是对称的，所以不需要循环imgs.length次，而是imgs.length/2
     //把第三张图片放在正中央   左右分别放三张
-    var INow = 3;
+    var INow = 4;
     var target = 0;
     //解决疯狂点击   用一个类似于锁的变量
     var off = true;
@@ -198,7 +199,7 @@
             off = false;
             if (target > INow) {
                 //4 5  6
-                if (target - INow <= 3) {
+                if (target - INow <= 4) {
                     goNext();
                 } else {
                     goPre();
@@ -207,7 +208,7 @@
             //就把哪一张放在中间
             else {
                 //0 1 2
-                if (target + 7 - INow <= 3) {
+                if (target + 9 - INow <= 4) {
                     goNext();
                 } else {
                     goPre();
@@ -220,7 +221,7 @@
 
     function goNext() {
         INow++;
-        if (INow > 6) {
+        if (INow > 8) {
             INow = 0;
         }
         Tab(INow);
@@ -237,7 +238,7 @@
     function goPre() {
         INow--;
         if (INow < 0) {
-            INow = 6;
+            INow = 8;
         }
         Tab(INow);
         //如果到了目标点的时候就停止移动
@@ -255,17 +256,17 @@
     //4 5 6 0 1 2 3
     //3 4 5 6 0 1 2
     function Tab(n) {
-        for (var i = 0; i < 3; i++) {
+        for (var i = 0; i < 4; i++) {
             var left = n - 1 - i;
             //0在中间
             if (left < 0) {
-                left = left + 7;
+                left = left + 9;
             }
             imgs[left].style.transform = 'translateX(' + (-150 * (i + 1)) + 'px)translateZ(' + (150 - 100 * i) + 'px)rotateY(30deg)';
             //6在中间
             var right = n + 1 + i;
-            if (right > 6) {
-                right = right - 7;
+            if (right > 8) {
+                right = right - 9;
             }
             imgs[right].style.transform = 'translateX(' + (150 * (i + 1)) + 'px)translateZ(' + (150 - 100 * i) + 'px)rotateY(-30deg)';
         }
@@ -529,8 +530,8 @@
 
     #wrap img {
         /*对所有的图片进行设置样式*/
-        width: 400px;
-        height: 250px;
+        /*width: 400px;*/
+        height: 350px;
         /*这里一定要设置为绝对定位*/
         position: absolute;
         /*calc()是一个计算函数  页面的宽度-容器宽度的一半*/
